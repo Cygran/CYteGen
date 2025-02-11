@@ -1,4 +1,7 @@
+from textnode import *
+
 def main():
-    print("hello world")
+    node = TextNode("Hello", TextType.BOLD_TEXT, "https://example.com")
+    print(node)
 
 main()
