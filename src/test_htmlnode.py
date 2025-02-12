@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHTMLNode(unittest.TestCase):
     def test_props_to_html_with_none(self):
@@ -44,6 +44,66 @@ class TestLeafNode(unittest.TestCase):
         with self.assertRaises(ValueError):
             node = LeafNode(value=None, tag="p")
             node.to_html()
+
+class TestParentNode(unittest.TestCase):
+    def test_basic_parent(self):
+        node = ParentNode("div", [LeafNode("Hello")])
+        self.assertEqual(node.to_html(), "<div>Hello</div>")
+    
+    def test_parent_with_props(self):
+        node = ParentNode(
+            "div", 
+            [LeafNode("Hello")], 
+            {"class": "container"}
+        )
+        self.assertEqual(
+            node.to_html(), 
+            '<div class="container">Hello</div>'
+        )
+    
+    def test_parent_no_tag(self):
+        node = ParentNode(None, [LeafNode("Hello")])
+        with self.assertRaises(ValueError):
+            node.to_html()
+    
+    def test_parent_no_children(self):
+        node = ParentNode("div", None)
+        with self.assertRaises(ValueError):
+            node.to_html()
+
+    def test_multiple_children(self):
+        node = ParentNode(
+            "div",
+            [
+                LeafNode("Hello"),
+                LeafNode("World")
+            ]
+        )
+        self.assertEqual(node.to_html(), "<div>HelloWorld</div>")
+
+    def test_deeply_nested(self):
+
+        nested_node = ParentNode(
+            "div",
+            [
+                ParentNode(
+                    "p",
+                    [
+                        LeafNode("Bold text", "b"),
+                        LeafNode("Normal text"),
+                        LeafNode("italic text", "i")
+                    ]
+                )
+            ]
+        )
+        expected = "<div><p><b>Bold text</b>Normal text<i>italic text</i></p></div>"
+        self.assertEqual(nested_node.to_html(), expected)
+    
+    def test_parent_empty_children(self):
+        node = ParentNode("div", [])  # empty list, not None
+        self.assertEqual(node.to_html(), "<div></div>")
+
+
 
 if __name__ == "__main__":
     unittest.main()
