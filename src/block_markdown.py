@@ -39,3 +39,9 @@ def block_to_block_type(block):
             i += 1
         return block_type_olist
     return block_type_paragraph
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    if blocks and blocks[0].lstrip().startswith("#"):
+        return blocks[0].lstrip("#").strip()
+    raise Exception("No title found")

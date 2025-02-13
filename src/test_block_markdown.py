@@ -59,6 +59,24 @@ This is the same paragraph on a new line
         self.assertEqual(block_to_block_type(block), block_type_olist)
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), block_type_paragraph)
+
+    def test_extract_title(self):
+        md = "# title\n\nparagraph"
+        self.assertEqual(extract_title(md), "title")
+
+    def test_extract_title_no_title(self):
+        md = "paragraph"
+        with self.assertRaises(Exception):
+            extract_title(md)
+
+    def test_extract_title_no_title_newline(self):
+        md = "\nparagraph"
+        with self.assertRaises(Exception):
+            extract_title(md)
+
+    def test_extract_title_extra_leading_whitespace(self):
+        md = "   # title\n\nparagraph"
+        self.assertEqual(extract_title(md), "title")
         
             
 if __name__ == "__main__":
