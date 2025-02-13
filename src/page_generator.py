@@ -18,3 +18,12 @@ def generate_page(from_path, template_path, to_path):
     
     with open(to_path, "w") as to_file:
         to_file.write(page)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for root, _, files in os.walk(dir_path_content):
+        for file in files:
+            if file.endswith(".md"):
+                from_path = os.path.join(root, file)
+                to_path = os.path.join(dest_dir_path, os.path.relpath(from_path, dir_path_content)).replace(".md", ".html")
+                print(f"Converting {from_path} to {to_path}") # debugging
+                generate_page(from_path, template_path, to_path)
