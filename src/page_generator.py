@@ -11,7 +11,7 @@ def generate_page(from_path, template_path, to_path):
     markdown_title = extract_title(markdown)
     markdown_node = markdown_to_html_node(markdown)
     html = markdown_node.to_html()
-    page = template.replace("{{title}}", markdown_title).replace("{{content}}", html)
+    page = template.replace("{{ Title }}", markdown_title).replace("{{ Content }}", html)
     directory = os.path.dirname(to_path)
     if directory:
         os.makedirs(directory, exist_ok=True)
